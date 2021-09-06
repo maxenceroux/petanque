@@ -1,12 +1,26 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 
-import crud, models, schemas
-from database import SessionLocal, engine
+import backend.crud as crud, backend.models as models, backend.schemas as schemas
+from backend.database import SessionLocal, engine
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import os
 
+app = FastAPI()
+print(os.getcwd())
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+
+templates = Jinja2Templates(directory="frontend/templates")
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+@app.get("/index", response_class=HTMLResponse)
+async def read_item(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 # Dependency

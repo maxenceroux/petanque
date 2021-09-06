@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, Integer, Float, String
 
-from database import Base
+from backend.database import Base
 
 
 class Terrain(Base):

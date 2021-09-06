@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-import models, schemas
+import backend.models as models, backend.schemas as schemas
 
 
 def get_terrain(db: Session, terrain_id: str):
