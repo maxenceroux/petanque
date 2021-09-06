@@ -23,38 +23,25 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/contact", response_model=schemas.ContactSchema)
-def create_contact(
-    contact: schemas.ContactSchema,
+@app.post("/terrain", response_model=schemas.TerrainSchema)
+def create_terrain(
+    terrain: schemas.TerrainSchema,
     db: Session = Depends(get_db),
 ):
-    db_contact = crud.get_contact_by_contact_id(db, contact_id=contact.contact_id)
-    if db_contact:
-        raise HTTPException(status_code=400, detail="Contact already in db")
-    return crud.create_contact(db=db, contact=contact)
+    db_terrain = crud.get_terrain(db, terrain_id=terrain.id)
+    if db_terrain:
+        raise HTTPException(status_code=400, detail="Terrain already in db")
+    return crud.create_terrain(db=db, terrain=terrain)
 
 
-@app.post("/contacts", response_model=schemas.ContactsSchema)
-def create_contacts(
-    contacts: schemas.ContactsSchema,
-    db: Session = Depends(get_db),
-):
-    for ct in contacts.contacts:
-        db_contact = crud.get_contact_by_contact_id(db, contact_id=ct.contact_id)
-        if db_contact:
-            raise HTTPException(status_code=400, detail="Contact already in db")
-        crud.create_contact(db=db, contact=ct)
-    return contacts
+@app.get("/terrain/{terrain_id}", response_model=schemas.TerrainSchema)
+def get_terrain(terrain_id: int, db: Session = Depends(get_db)):
+    model_terrain = crud.get_terrain(db, terrain_id=terrain_id)
+    if model_terrain is None:
+        raise HTTPException(status_code=404, detail="Terrain not found")
+    return model_terrain
 
 
-@app.get("/contact/{contact_id}", response_model=schemas.ContactSchema)
-def get_contact(contact_id: int, db: Session = Depends(get_db)):
-    db_contact = crud.get_contact(db, contact_id=contact_id)
-    if db_contact is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_contact
-
-
-@app.get("/contacts")
-def get_contact(db: Session = Depends(get_db)):
-    return crud.get_contacts(db=db)
+@app.get("/terrains")
+def get_terrains(db: Session = Depends(get_db)):
+    return crud.get_terrains(db=db)

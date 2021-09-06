@@ -1,11 +1,12 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, Integer, Float, String
 
 from database import Base
 
 
-class Contact(Base):
-    __tablename__ = "contacts"
+class Terrain(Base):
+    __tablename__ = "terrains"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    contact_id = Column(Integer, unique=True, index=True)
+    name = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
