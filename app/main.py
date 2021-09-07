@@ -8,14 +8,15 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 
-app = FastAPI()
-print(os.getcwd())
-app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
-templates = Jinja2Templates(directory="frontend/templates")
+app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="/app/frontend/static"), name="static")
+
+
+templates = Jinja2Templates(directory="/app/frontend/templates")
+
 models.Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
 
 
 @app.get("/index", response_class=HTMLResponse)
